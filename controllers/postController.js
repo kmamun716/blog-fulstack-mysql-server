@@ -2,6 +2,7 @@ const db = require("../modles");
 
 const Posts = db.posts;
 const User = db.users;
+const Comment = db.comments;
 
 module.exports = {
   createPost: async (req, res) => {
@@ -25,14 +26,19 @@ module.exports = {
   },
   getAllPost: async (req, res) => {
     const posts = await Posts.findAll({
-        attributes: {exclude: ['user_id']},
-        include: [
-            {
-              model: User,
-              as: "user", //same as models/index.js
-              attributes: ['name', 'email']
-            },
-          ]
+      attributes: { exclude: ["user_id"] },
+      include: [
+        {
+          model: User,
+          as: "user", //same as models/index.js
+          attributes: ["name", "email"],
+        },
+        {
+          model: Comment,
+          as: "comments",
+          attributes: ["name", "comment"],
+        },
+      ],
     });
     if (posts.length > 0) {
       res.status(200).json({
@@ -54,10 +60,15 @@ module.exports = {
         {
           model: User,
           as: "user", //same as models/index.js
-          attributes: ['name', 'email']
+          attributes: ["name", "email"],
+        },
+        {
+          model: Comment,
+          as: "comments",
+          attributes: ["name", "comment"],
         },
       ],
-      attributes: {exclude: ['user_id']}
+      attributes: { exclude: ["user_id"] },
     });
     if (post !== null) {
       res.status(200).json({
@@ -71,6 +82,28 @@ module.exports = {
       });
     }
   },
-  editPost: async (req, res) => {},
-  deletePost: async (req, res) => {},
+  editPost: async (req, res) => {
+    const id = req.params.id;
+    try {
+      const updatePost = await Posts.update(req.body, { where: { id: id } });
+      if (updatePost[0] === 1) {
+        res.send("post updated successfully");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  deletePost: async (req, res) => {
+    const id = req.params.id;
+    const result = await Posts.destroy({ where: { id: id } });
+    if (result === 1) {
+      res.status(200).json({
+        message: "post deleted successfully",
+      });
+    } else {
+      res.status(400).json({
+        error: "there have some error",
+      });
+    }
+  },
 };
