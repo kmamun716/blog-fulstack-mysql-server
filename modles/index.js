@@ -41,10 +41,10 @@ db.sequelize.sync({force: false})
     console.log('re sync done');
 })
 
-//user connection with post
+//user connection with post model
 db.users.hasMany(db.posts,{
     foreignKey: 'user_id',
-    as: 'post'
+    as: 'posts'
 })
 
 db.posts.belongsTo(db.users,{

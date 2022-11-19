@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = db.users;
+const Post = db.posts;
 
 module.exports = {
     register: async(req, res)=>{
@@ -54,7 +55,7 @@ module.exports = {
         })
     },
     getAllUser: async(req, res)=>{
-        const users = await db.users.findAll();
+        const users = await db.users.findAll({attributes: { exclude: ['password'] }});
         if(users.length>0){
             res.status(200).json(users)
         }else{
@@ -65,7 +66,15 @@ module.exports = {
     },
     getUserById: async(req, res)=>{
         const id = req.params.id;
-        const user = await User.findOne({where: {id: id}, attributes:{ exclude: ['password', 'createdAt', 'updatedAt'] }});
+        const user = await User.findOne({
+            where: {id: id}, 
+            attributes:{ exclude: ['password', 'createdAt', 'updatedAt'] },
+            include: [{
+                model: Post,
+                as: 'posts', //same as models/index.js
+                attributes: {exclude: ['user_id']}
+            }]
+        });
         if(user !== null){
             res.status(200).json({
                 status: 'success',

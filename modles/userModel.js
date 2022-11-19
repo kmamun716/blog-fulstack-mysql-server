@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     mobile: {
       type: DataTypes.STRING,
-    },
+    }
   });
 
   return User;
