@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     mobile: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
 
