@@ -64,12 +64,42 @@ module.exports = {
         }
     },
     getUserById: async(req, res)=>{
-        
+        const id = req.params.id;
+        const user = await User.findOne({where: {id: id}, attributes:{ exclude: ['password', 'createdAt', 'updatedAt'] }});
+        if(user !== null){
+            res.status(200).json({
+                status: 'success',
+                user: user
+            })
+        }else{
+            res.status(203).json({
+                status: 'fail',
+                message: 'user not found'
+            })
+        }
     },
     editUser: async(req, res)=>{
-        
+        const id = req.params.id;
+        try{
+            const updateUser = await User.update(req.body, {where: {id: id}});
+            if(updateUser[0] === 1){
+                res.send('user updated successfully')
+            }
+        }catch(err){
+            console.log(err)
+        }
     },
     deleteUser: async(req, res)=>{
-        
+        const id = req.params.id;
+        const result = await User.destroy({where: {id: id}})
+        if(result === 1){
+            res.status(200).json({
+                message: 'user deleted successfully'
+            })
+        }else{
+            res.status(400).json({
+                error: 'there have some error'
+            })
+        }
     }
 };
