@@ -25,6 +25,7 @@ module.exports = {
   },
   getAllPost: async (req, res) => {
     const posts = await Posts.findAll({
+        attributes: {exclude: ['user_id']},
         include: [
             {
               model: User,
@@ -56,6 +57,7 @@ module.exports = {
           attributes: ['name', 'email']
         },
       ],
+      attributes: {exclude: ['user_id']}
     });
     if (post !== null) {
       res.status(200).json({
