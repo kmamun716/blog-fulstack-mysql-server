@@ -16,7 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     mobile: {
       type: DataTypes.STRING,
-    }
+    },
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: "user",
+    },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: "active",
+    },
   });
 
   return User;

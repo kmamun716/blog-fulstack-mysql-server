@@ -89,13 +89,36 @@ module.exports = {
     },
     editUser: async(req, res)=>{
         const id = req.params.id;
-        try{
+        if(Object.keys(req.body).length>0){
             const updateUser = await User.update(req.body, {where: {id: id}});
             if(updateUser[0] === 1){
-                res.send('user updated successfully')
+                res.status(200).json({
+                    status: 'success',
+                    message: 'user updated successfully'
+                })
             }
-        }catch(err){
-            console.log(err)
+        } else {
+            res.status(203).json({
+                status: 'failed',
+                message: 'not have any updating data'
+            })
+        }
+    },
+    updateUserByAdmin: async(req, res)=>{
+        const id = req.params.id;
+        if(Object.keys(req.body).length>0){
+            const updateUser = await User.update(req.body, {where: {id: id}});
+            if(updateUser[0] === 1){
+                res.status(200).json({
+                    status: 'success',
+                    message: 'user updated successfully'
+                })
+            }
+        } else {
+            res.status(203).json({
+                status: 'failed',
+                message: 'not have any updating data'
+            })
         }
     },
     deleteUser: async(req, res)=>{
